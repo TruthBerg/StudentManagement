@@ -1,14 +1,12 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 
 /**
  * 
-For this assignment, students’ information is not read from an input file. Instead, it will be entered by the user. 
-As mentioned earlier, you must store students’ information in Java’s ArrayList. 
-The reference to a Student object should be an element of an ArrayList.
+ * This program asks users to enter a student's information and stores it in an ArrayList.
+ * Users then have the option to display a student's information, remove a student from the list, or update the student's GPA.
  * @author emmettgreenberg
  *
  */
@@ -22,6 +20,7 @@ public class StudentManagement {
 		Scanner input = new Scanner(System.in);
 		boolean done = false;
 		
+		// loop until the user quits
 		while (!done) {
 			displayMenu();
 		
@@ -35,13 +34,13 @@ public class StudentManagement {
 				input.next(); // clears the bad input
 				continue;
 			}
-			
+			// check that the user's input is one of the valid options 1-5
 			if (!(option >= 1 && option <= 5)) {
 				System.out.println("Did not recognize that option. Please try again"); // invalid input
 				continue;
 			}
 			
-			
+			// perform a task based on the user's input
 			switch (option) {
 			case 1:
 				System.out.println("* Add Student *");
@@ -51,27 +50,13 @@ public class StudentManagement {
 				 // prompt user to enter student ID
 				System.out.println("Please enter the student's ID:");
 				id = input.next();
-				
+				// check that it does not already exist
 				Student st = findStudentWithID(id, students);
 				if (st != null) {
 					System.out.println("That student ID already exists.");
 					Thread.sleep(1000);
 					continue;
 				}
-				
-//				// check if the given student ID is already in the list
-//				boolean found = false;
-//				for (Student s: students) {
-//					if (s.getStudentID().equals(id)) {
-//						found = true;
-//						break;
-//					}
-//				}
-//				// if it exists, display error message and return to main menu
-//				if (found) {
-//					System.out.println("That student ID already exists.");
-//					continue;
-//				}
 				
 				// prompt user to enter SSN
 				input.nextLine(); // clears the input
@@ -89,36 +74,20 @@ public class StudentManagement {
 				address = input.nextLine();
 				
 				//  prompt user for email
-				//input.nextLine();
 				System.out.println("Please enter the student's email:");
 				email = input.next();
 				
-				// major
+				// prompt user for major
 				input.nextLine();
 				System.out.println("Please enter the student's major:");
 				major = input.nextLine();
 				
 				// prompt user for GPA (must be a double)..
-				gpa = getGPA(input); // gets the GPA from user input
-				
-//				System.out.println("Please enter the student's gpa (two decimals):");
-//				boolean isDouble = false;
-//				while (!isDouble) {
-//					if (input.hasNextDouble()) {
-//						gpa = input.nextDouble();
-//						isDouble = true;
-//					}
-//					else {
-//						System.out.println("Invalid input. Please try again:");
-//						input.nextLine();
-//					}
-//				}
+				gpa = getGPA(input); // static method call
 				
 				// create student object and store in array
 				Student stud = new Student(ssn, name, address, email, id,  major, gpa);
 				students.add(stud);
-				
-				stud.printStudent();
 				
 				break; // exit the case
 			
@@ -132,14 +101,13 @@ public class StudentManagement {
 				 *  appropriate message indicating a successful operation, and displays the main menu.
 				 */
 				
+				// Prompt the user to enter a studentID
 				System.out.println("Please enter the student's ID:");
-//				if (!input.hasNext()) {
-//					input.next();
-//				}
 				String id2  = input.next();
 				
-				Student st2 = findStudentWithID(id2, students); // student to be removed
+				Student st2 = findStudentWithID(id2, students); // locates the student to be removed
 				
+				// check that ID exists
 				if (st2 == null) {
 					System.out.println("Operation failed: There is  no student with that ID.");
 					Thread.sleep(1000); // pause for one second
@@ -148,34 +116,12 @@ public class StudentManagement {
 				
 				// remove student
 				students.remove(st2);
-				System.out.println("Successfully removed student " + st2.getStudentID());
-				
-//				boolean removed = false;
-//				
-//				// find the index of the student whose ID matches the input ID
-//				
-//				// use an iterator to search list and remove student with the given id
-//				Iterator<Student> itr = students.iterator();
-//				while (itr.hasNext()){
-//					if (itr.next().getStudentID().equals(id2)) {
-//						System.out.println("ID matches");
-//						itr.remove(); // removes the current element
-//						removed = true;
-//					}
-//				}
-//				if (!removed) {
-//					System.out.println("That student ID " + id2 + "is not in our records.");
-//					continue; // return to main menu
-//				}
-//				else {
-//					System.out.println("Successfully removed student.");
-//				}
+				System.out.println("Successfully removed student "+  st2.toString());
 				
 				// check that student was removed
 				for (Student s: students) {
 					s.printStudent();
 				}
-				System.out.println("list size " + students.size());
 				
 				break;
 				
@@ -192,15 +138,15 @@ public class StudentManagement {
 				 * indicating a successful operation, and displays the main menu.
 				 */
 				
-				System.out.println("Please enter the student's ID:");
 				 // prompt user to enter student ID
+				System.out.println("Please enter the student's ID:");
 				String id3 = input.next();
 				
-				// check if the given student ID exsists
+				// check if the given student ID exists
 				Student st3 = findStudentWithID(id3, students);
 		
-				// if it does not exist, display error message and return to main menu
-				if (st3 == null) { // if student not null
+				// if student does not exist, display error message and return to main menu
+				if (st3 == null) {
 					System.out.println("A student with that ID does not exist.");
 					Thread.sleep(1000);
 					continue;
@@ -211,7 +157,8 @@ public class StudentManagement {
 				// update GPA
 				st3.setGPA(newGPA);
 				System.out.println("Successfully updated the GPA of student " + st3.getName());
-				 break;
+				
+				break;
 				
 			case 4:
 				/*
@@ -220,9 +167,11 @@ public class StudentManagement {
 				 * error message, and displays the main menu.
 				 * Otherwise, displays the student information (s.printStudent())
 				 */
+				
 				System.out.println("* Display Student *");
 				String id4 = getStudentIDFromUser(input);
-				// find student with given id
+				
+				// find student with given ID
 				Student st4 = findStudentWithID(id4, students);
 				if (st4 == null) {
 					System.out.println("There is no student with that ID.");
@@ -230,18 +179,25 @@ public class StudentManagement {
 					continue;
 				}
 				
-				// print student
 				st4.printStudent();
-				Thread.sleep(1000);
+				Thread.sleep(1000); // pause for one second
+				
 				break;
+				
 			case 5:
+				/* Program terminates */
 				System.out.println("Goodbye.");
 				done = true;
 				
 			}
 		}
 	}
-
+	
+	/** 
+	 * Function prompts user for input and returns it
+	 * @param input the scanner object
+	 * @return id the user input
+	 */
 	public static String getStudentIDFromUser(Scanner input) {
 		System.out.println("Please enter the student's ID:");
 		if (!input.hasNext()) {
@@ -251,6 +207,12 @@ public class StudentManagement {
 		return id;
 	}
 	
+	/**
+	 * Function takes a studentID and a list of students and returns the student with matching studentID
+	 * @param id
+	 * @param students 
+	 * @return s the student with the given studentID
+	 */
 	public static Student findStudentWithID (String id, ArrayList<Student> students) {
 		for (Student s: students) {
 			if (s.getStudentID().equals(id)) {
@@ -260,6 +222,11 @@ public class StudentManagement {
 		return null;
 	}
 	
+	/**
+	 * Function prompts user for student GPA and returns it
+	 * @param input the Scanner object
+	 * @return gpa
+	 */
 	@SuppressWarnings("resource")
 	public static double getGPA(Scanner input) {
 		input = new Scanner (System.in);
@@ -278,9 +245,10 @@ public class StudentManagement {
 		return gpa;
 	}
 	
+	/**
+	 * Function prints the list of user options
+	 */
 	public static void displayMenu() throws InterruptedException {
-	
-//		Thread.sleep(1000);	// pause for a second
 		System.out.println("*** Menu ***\n" + 
 				"Please choose an option:\n" +
 				"1. Add a student\n" + 
@@ -290,6 +258,4 @@ public class StudentManagement {
 				"5. Exit"
 				);
 	}
-	
-
 }

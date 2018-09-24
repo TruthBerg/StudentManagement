@@ -1,5 +1,8 @@
 package main;
-
+/**
+ * My Student class
+ * @author emmettgreenberg
+ */
 public class Student extends Person {
 	String studentID;
 	String major;
